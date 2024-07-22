@@ -1,28 +1,11 @@
-// import React from 'react';
-// import { View, Text, Button } from 'react-native';
-
-// const DateAndTime = ({ navigation }) => {
-//   return (
-//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//       <Text>select date and time</Text>
-//       <Text>apply coupen too</Text>
-//       <Button
-//         title="continue"
-//         onPress={() => navigation.navigate('Rent Details')}
-//       />
-//     </View>
-//   );
-// };
-
-// export default DateAndTime;
 import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  TextInput,
   ScrollView,
+  Image
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -36,8 +19,6 @@ const DateAndTime = () => {
   const [showFromTimePicker, setShowFromTimePicker] = useState(false);
   const [showToTimePicker, setShowToTimePicker] = useState(false);
   const [carrierPreference, setCarrierPreference] = useState('withCarrier');
-  const [couponCode, setCouponCode] = useState('');
-  const [showCouponCode, setShowCouponCode] = useState(false);
 
   const handleTripTypeChange = (value) => {
     setTripType(value);
@@ -65,11 +46,6 @@ const DateAndTime = () => {
 
   const handleCarrierPreferenceChange = (value) => {
     setCarrierPreference(value);
-  };
-
-  const handleCouponCodeChange = (text) => {
-    setCouponCode(text);
-    setShowCouponCode(!!text);
   };
 
   const formatDate = (date) => {
@@ -219,22 +195,14 @@ const DateAndTime = () => {
       </View>
 
       <View style={styles.couponContainer}>
-        {showCouponCode && (
-          <View style={styles.couponInput}>
-            <TextInput
-              style={styles.couponInputText}
-              placeholder="Enter Coupon Code"
-              value={couponCode}
-              onChangeText={handleCouponCodeChange}
-            />
-          </View>
-        )}
         <TouchableOpacity
           style={styles.couponBtn}
           onPress={() => {}}
         >
-          <Text style={styles.couponBtnText}>Use Coupon Code</Text>
-          {showCouponCode && <AntDesign name="check" size={18} color="#000" />}
+          <Image
+            source={require('.././assets/coupon.png')} // Replace with your image path
+            style={styles.couponImage}
+          />
         </TouchableOpacity>
       </View>
 
@@ -323,7 +291,6 @@ const styles = StyleSheet.create({
   },
   dateInputText: {
     fontSize: 16,
-    flex: 1,
   },
   carrierPreferenceContainer: {
     flexDirection: 'row',
@@ -339,40 +306,26 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   couponContainer: {
+    alignItems: 'center',
     marginBottom: 20,
   },
-  couponInput: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  couponInputText: {
-    fontSize: 16,
-  },
   couponBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
+    // Remove any additional styling here
   },
-  couponBtnText: {
-    fontSize: 16,
-    flex: 1,
+  couponImage: {
+    width: 300,
+    height: 80,
+    resizeMode: 'contain',
   },
   confirmButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#38AA78',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
   },
   confirmButtonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

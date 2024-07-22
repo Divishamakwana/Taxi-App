@@ -343,14 +343,14 @@ const mapStyle = [
     "featureType": "road.highway",
     "elementType": "geometry",
     "stylers": [
-      { "color": "#c0c0c0" } // Slightly darker grey color for highways
+      { "color": "#FFFFFF" } // Slightly darker grey color for highways
     ]
   },
   {
     "featureType": "road.arterial",
     "elementType": "geometry",
     "stylers": [
-      { "color": "#b0b0b0" } // Medium grey color for arterial roads
+      { "color": "FFFFFF" } // Medium grey color for arterial roads
     ]
   },
   {
