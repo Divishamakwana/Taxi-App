@@ -216,7 +216,7 @@ const DateAndTime = ({navigation}) => {
           onPress={() => {setModalVisible(true)}}
         >
           <Image
-            source={require('.././assets/coupon.png')} 
+            source={require('.././assets/images/coupon.png')} 
             style={styles.couponImage}
           />
         </TouchableOpacity>

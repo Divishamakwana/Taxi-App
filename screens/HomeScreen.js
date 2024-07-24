@@ -187,7 +187,7 @@ const HomeScreen = ({ navigation }) => {
             identifier="pickup"
           >
             <Image
-              source={require('.././assets/redpin.png')}
+              source={require('.././assets/images/redpin.png')}
               style={styles.markerImage} // Apply styles for marker size
             />
           </Marker>
@@ -202,7 +202,7 @@ const HomeScreen = ({ navigation }) => {
             identifier="drop"
           >
             <Image
-              source={require('.././assets/greenpin.png')}
+              source={require('.././assets/images/greenpin.png')}
               style={styles.markerImage} // Apply styles for marker size
             />
           </Marker>
