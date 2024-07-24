@@ -5,12 +5,19 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Image
+  Image,
+  Modal,
+  Animated,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import CalendarIcon from '../assets/icons/CalendarIcon';
+import ClockIcon from '../assets/icons/ClockIcon';
+import DisableCalendarIcon from '../assets/icons/DisableCalendarIcon';
+import DisableClockIcon from '../assets/icons/DisableClockIcon';
+import DownArrowIcon from '../assets/icons/DownArrowIcon';
 
-const DateAndTime = () => {
+const DateAndTime = ({navigation}) => {
   const [tripType, setTripType] = useState('oneWay');
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
@@ -19,6 +26,7 @@ const DateAndTime = () => {
   const [showFromTimePicker, setShowFromTimePicker] = useState(false);
   const [showToTimePicker, setShowToTimePicker] = useState(false);
   const [carrierPreference, setCarrierPreference] = useState('withCarrier');
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleTripTypeChange = (value) => {
     setTripType(value);
@@ -66,7 +74,7 @@ const DateAndTime = () => {
           >
             {tripType === 'oneWay' && <View style={styles.radioBtnInner} />}
           </TouchableOpacity>
-          <Text style={styles.tripTypeText}>One Way Trip</Text>
+          <Text style={[styles.tripTypeText, tripType === 'oneWay' && styles.ActiveText]}>One Way Trip</Text>
         </View>
         <View style={styles.tripTypeOption}>
           <TouchableOpacity
@@ -78,7 +86,7 @@ const DateAndTime = () => {
           >
             {tripType === 'roundTrip' && <View style={styles.radioBtnInner} />}
           </TouchableOpacity>
-          <Text style={styles.tripTypeText}>Round Trip</Text>
+          <Text style={[styles.tripTypeText, tripType === 'roundTrip' && styles.ActiveText]}>Round Trip</Text>
         </View>
       </View>
 
@@ -92,14 +100,16 @@ const DateAndTime = () => {
               onPress={() => setShowFromDatePicker(true)}
             >
               <Text style={styles.dateInputText}>{formatDate(fromDate)}</Text>
-              <AntDesign name="calendar" size={18} color="#000" />
+              {/* <AntDesign name="calendar" size={18} color="#000" /> */}
+              <CalendarIcon />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.timeInputBox}
               onPress={() => setShowFromTimePicker(true)}
             >
               <Text style={styles.dateInputText}>{fromDate.toLocaleTimeString('en-US')}</Text>
-              <AntDesign name="clockcircleo" size={18} color="#000" />
+              {/* <AntDesign name="clockcircleo" size={18} color="#000" /> */}
+              <ClockIcon />
             </TouchableOpacity>
           </View>
           {showFromDatePicker && (
@@ -123,47 +133,53 @@ const DateAndTime = () => {
             />
           )}
         </View>
-        {tripType === 'roundTrip' && (
-          <View style={styles.dateInput}>
-            <Text style={styles.dateLabel}>To</Text>
-            <View style={styles.dateTimeRow}>
-              <TouchableOpacity
-                style={styles.dateInputBox}
-                onPress={() => setShowToDatePicker(true)}
-              >
-                <Text style={styles.dateInputText}>{formatDate(toDate)}</Text>
-                <AntDesign name="calendar" size={18} color="#000" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.timeInputBox}
-                onPress={() => setShowToTimePicker(true)}
-              >
-                <Text style={styles.dateInputText}>{toDate.toLocaleTimeString('en-US')}</Text>
-                <AntDesign name="clockcircleo" size={18} color="#000" />
-              </TouchableOpacity>
-            </View>
-            {showToDatePicker && (
-              <DateTimePicker
-                value={toDate}
-                mode="date"
-                display="default"
-                onChange={(event, selectedDate) =>
-                  handleDateChange(event, selectedDate, 'to')
-                }
-              />
-            )}
-            {showToTimePicker && (
-              <DateTimePicker
-                value={toDate}
-                mode="time"
-                display="default"
-                onChange={(event, selectedDate) =>
-                  handleTimeChange(event, selectedDate, 'to')
-                }
-              />
-            )}
+        {/* {tripType === 'roundTrip' && ( */}
+        <View style={styles.dateInput}>
+          <Text style={styles.dateLabel}>To</Text>
+          <View style={styles.dateTimeRow}>
+            <TouchableOpacity
+              style={[styles.dateInputBox, tripType === 'oneWay' && styles.DisableInputBox]}
+              onPress={() => setShowToDatePicker(true)}
+              disabled={tripType === 'oneWay'}
+            >
+              <Text style={[styles.dateInputText, tripType === 'oneWay' && styles.DisableText]}>{formatDate(toDate)}</Text>
+              {/* <AntDesign name="calendar" size={18} color="#000" /> */}
+              {tripType === 'oneWay' ? <DisableCalendarIcon /> : <CalendarIcon />}
+
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.timeInputBox, tripType === 'oneWay' && styles.DisableInputBox]}
+              onPress={() => setShowToTimePicker(true)}
+              disabled={tripType === 'oneWay'}
+            >
+              <Text style={[styles.dateInputText, tripType === 'oneWay' && styles.DisableText]}>{toDate.toLocaleTimeString('en-US')}</Text>
+              {/* <AntDesign name="clockcircleo" size={18} color="#000" /> */}
+              {tripType === 'oneWay' ? <DisableClockIcon /> : <ClockIcon />}
+
+            </TouchableOpacity>
           </View>
-        )}
+          {showToDatePicker && (
+            <DateTimePicker
+              value={toDate}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) =>
+                handleDateChange(event, selectedDate, 'to')
+              }
+            />
+          )}
+          {showToTimePicker && (
+            <DateTimePicker
+              value={toDate}
+              mode="time"
+              display="default"
+              onChange={(event, selectedDate) =>
+                handleTimeChange(event, selectedDate, 'to')
+              }
+            />
+          )}
+        </View>
+        {/* )} */}
       </View>
 
       <Text style={styles.title}>Carrier Preference</Text>
@@ -178,7 +194,7 @@ const DateAndTime = () => {
           >
             {carrierPreference === 'withCarrier' && <View style={styles.radioBtnInner} />}
           </TouchableOpacity>
-          <Text style={styles.carrierPreferenceText}>With Carrier</Text>
+          <Text style={[styles.carrierPreferenceText, carrierPreference === 'withCarrier' && styles.ActiveText]}>With Carrier</Text>
         </View>
         <View style={styles.carrierPreferenceOption}>
           <TouchableOpacity
@@ -190,25 +206,46 @@ const DateAndTime = () => {
           >
             {carrierPreference === 'withoutCarrier' && <View style={styles.radioBtnInner} />}
           </TouchableOpacity>
-          <Text style={styles.carrierPreferenceText}>Without Carrier</Text>
+          <Text style={[styles.carrierPreferenceText, carrierPreference === 'withoutCarrier' && styles.ActiveText,]}>Without Carrier</Text>
         </View>
       </View>
 
       <View style={styles.couponContainer}>
         <TouchableOpacity
           style={styles.couponBtn}
-          onPress={() => {}}
+          onPress={() => {setModalVisible(true)}}
         >
           <Image
-            source={require('.././assets/coupon.png')} // Replace with your image path
+            source={require('.././assets/coupon.png')} 
             style={styles.couponImage}
           />
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.confirmButton} onPress={() => {}}>
+      <TouchableOpacity style={styles.confirmButton} onPress={() => { navigation.navigate('Rent Details')}}>
         <Text style={styles.confirmButtonText}>Confirm</Text>
       </TouchableOpacity>
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="none"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity style={styles.modalBackground} onPress={() => setModalVisible(false)} />
+          <Animated.View style={[styles.modalContainer]}>
+            <View style={styles.arrowContainer}>
+            <DownArrowIcon/>
+            </View>
+           
+            <Text style={styles.modalTitle}>Coupon Details</Text>
+            {/* Add your modal content here */}
+            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -219,14 +256,16 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 18,
     marginBottom: 10,
+    marginTop: 20,
+    fontFamily: 'Inter-Bold'
   },
   tripTypeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
+    marginTop: 5
   },
   tripTypeOption: {
     flexDirection: 'row',
@@ -243,16 +282,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   radioBtnActive: {
-    borderColor: '#38AA78',
+    borderColor: '#28825B',
   },
   radioBtnInner: {
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#38AA78',
+    backgroundColor: '#28825B',
   },
   tripTypeText: {
-    fontSize: 16,
+    fontSize: 14,
+    fontFamily: 'Inter-SemiBold'
   },
   dateContainer: {
     marginBottom: 20,
@@ -261,8 +301,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dateLabel: {
-    fontSize: 16,
-    marginBottom: 5,
+    fontSize: 14,
+    marginBottom: 10,
+    fontFamily: 'Inter-Medium'
   },
   dateTimeRow: {
     flexDirection: 'row',
@@ -274,10 +315,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 10,
     borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
+    borderColor: '#28825B',
+    borderRadius: 10,
     marginRight: 10,
     flex: 1,
+  },
+  DisableInputBox: {
+    borderColor: '#c7c7c7'
   },
   timeInputBox: {
     flexDirection: 'row',
@@ -285,25 +329,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 10,
     borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
+    borderColor: '#28825B',
+    borderRadius: 10,
     flex: 1,
   },
   dateInputText: {
-    fontSize: 16,
+    fontSize: 14,
+    color: '#28825B',
+    fontFamily: 'Inter-Bold'
+  },
+  DisableText: {
+    color: '#c7c7c7'
   },
   carrierPreferenceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
+    marginTop:10
   },
   carrierPreferenceOption: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   carrierPreferenceText: {
-    fontSize: 16,
-    marginLeft: 10,
+    fontSize: 14,
+    fontFamily: 'Inter-SemiBold',
+    marginLeft: 5,
   },
   couponContainer: {
     alignItems: 'center',
@@ -318,16 +369,55 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   confirmButton: {
-    backgroundColor: '#38AA78',
+    backgroundColor: '#28825B',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 10,
     alignItems: 'center',
   },
   confirmButtonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
+    fontSize:16
   },
+  ActiveText: {
+    color: '#28825B'
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontFamily: 'Inter-Bold'
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#28825B',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontFamily: 'Inter-Bold',
+    fontSize: 16,
+  },
+  arrowContainer:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  }
 });
 
 export default DateAndTime;
