@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
     // Remove any additional styling here
   },
   couponImage: {
-    width: 300,
+    width: 400,
     height: 80,
     resizeMode: 'contain',
   },
